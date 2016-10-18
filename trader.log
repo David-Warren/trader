@@ -1,0 +1,53 @@
+[1mWelcome to BitCoin Trader.[0m
+Command-line console for buying and selling BitCoins.
+
+     Syntax: BUY <amount> [currency]
+    Example: BUY 10
+
+     Syntax: BUYLIMIT <amount> <exchangerate> <currency>
+    Example: BUYLIMIT 10 100 USD
+
+     Syntax: SELL <amount> [currency]
+    Example: SELL 10
+
+     Syntax: SELLLIMIT <amount> <exchangerate> <currency>
+    Example: SELLLIMIT 10 100 USD
+
+If a currency is provided (USD, EUR, etc.), the order will buy as many BTC as the <amount> provides at the current exchange rates, updated once per 60 seconds.
+
+Order to BUY 10 BTC queued.
+Attempting to buy 10 BTC...
+No known exchange rate for BTC/USF. Order failed.
+No known exchange rate for BTC/USD. Order failed.
+No known exchange rate for BTC/USD. Order failed.
+Order to SELL 10 BTC queued.
+Attempting to sell 10 BTC...
+
+=== CURRENT BTC/USD: undefined ===
+=== CURRENT ORDERS ===
+BUY 10
+SELL 10
+[1mWelcome to BitCoin Trader.[0m
+Command-line console for buying and selling BitCoins.
+
+     Syntax: BUY <amount> [currency]
+    Example: BUY 10
+
+     Syntax: BUYLIMIT <amount> <exchangerate> <currency>
+    Example: BUYLIMIT 10 100 USD
+
+     Syntax: SELL <amount> [currency]
+    Example: SELL 10
+
+     Syntax: SELLLIMIT <amount> <exchangerate> <currency>
+    Example: SELLLIMIT 10 100 USD
+
+If a currency is provided (USD, EUR, etc.), the order will buy as many BTC as the <amount> provides at the current exchange rates, updated once per 60 seconds.
+
+No known exchange rate for BTC/USD. Order failed.
+Order to BUY 10 BTC queued.
+Attempting to buy 10 BTC...
+
+=== CURRENT BTC/USD: undefined ===
+=== CURRENT ORDERS ===
+BUY 10
