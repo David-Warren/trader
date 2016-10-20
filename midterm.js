@@ -6,21 +6,19 @@ var repl = require('repl'),
 //    config = require('./config'),
     rest = require('request');
 
-var red = '|u001b[31m' ,
+/*var red = '|u001b[31m' ,
     bold = '\u001b[1m' ,
     reset = '\u001b[0m';
-
+*/
 var orders = {};
-var market = {
-    rates: {}
-};
+var market = {rates:{}};
 
 //always start with good exchange rates.
 rest.get('https://coinbase.com/api/v1/currencies/exchange_rates').on('complete', function(data, res) {
   market.rates = data;
 });
 
-console.log(bold + 'Welcome to BitCoin Trader.' + reset + '\nCommand-line console for buying and selling BitCoins.\n\n     Syntax: BUY <amount> [currency]\n    Example: BUY 10\n\nIf a currency is provided (USD, EUR, etc.), the order will buy as many BTC as the <amount> provides at the current exchange rates, updated once per 60 seconds.\n');
+console.log('Welcome to BitCoin Trader.' + '\nCommand-line console for buying and selling BitCoins.\n\n     Syntax: BUY <amount> [currency]\n    Example: BUY 10\n\nIf a currency is provided (USD, EUR, etc.), the order will buy as many BTC as the <amount> provides at the current exchange rates, updated once per 60 seconds.\n');
 
 repl.start({
     prompt: 'coinbase> '
@@ -38,13 +36,16 @@ repl.start({
       if (typeof(tokens[3]) != 'undefined') {
         priceCeiling = parseFloat(tokens[3]);
       }
-
-      if (!amount) {
-        callback('No amount specified.');
-      } else {
+      
+//      if (!amount) {
+  //      callback('No amount specified.');
+     // } 
+else {
         switch (tokens[0]) {
           case 'buy':
-
+	    if(!amount) {
+		callback('No amount specified.');
+	        break;};
             if (denomination != 'BTC') {
               var originalCurrency = amount;
               var rate = market.rates[ 'btc_to_' + denomination.toLowerCase() ];
@@ -82,6 +83,9 @@ repl.start({
             } break;
 
           case 'sell':
+	    if(!amount) {
+		callback('No amount specified.');
+		break;};
 	    orders[ orderID ] = {
 		type: 'sell',
 		amount: amount,
@@ -91,7 +95,8 @@ repl.start({
           break;
 
 	 case 'orders':
-	    Object.Keys(orders).forEach(function(orderID) {
+	    console.log('=== CURRENT ORDERS ===');
+	    Object.keys(orders).forEach(function(orderID) {
 		var order = orders[ orderID ];
 		console.log(orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED');
 		}); break;
