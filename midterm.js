@@ -49,7 +49,7 @@ var conversion = http.get({
 );
 
 console.log('Welcome to BitCoin Trader.' + '\nCommand-line console for buying and selling BitCoins.\n\n     Syntax: BUY <amount> [currency]\n    Example: BUY 10\n\nIf a currency is provided (USD, EUR, etc.), the order will buy as many BTC as the <amount> provides at the current exchange rates, updated once per 60 seconds.\n');
-console.log(rate);
+
 repl.start({
     prompt: 'coinbase> '
   , eval: function(cmd, context, filename, callback) {
@@ -120,9 +120,22 @@ else {
 		type: 'sell',
 		amount: amount,
 		denomination: denomination
+		};
+
+	    if(denomination != 'BTC') {
+		var current_amount = amount;
+/*
+	    orders[ orderID ] = {
+		type: 'sell',
+		amount: amount,
+		denomination: denomination
 	    };
+*/
+		amount = (amount -0.15) / (1.01 * rate);
+		callback('Order to SELL ' + tokens[1] + ' ' + denomination + ' worth of BTC quened @ ' + rate + ' BTC/' + denomination + ' (' + amount + ' BTC) below ' + priceCeiling );
+		} else {
             callback('Order to SELL ' + tokens[1] + ' ' + denomination + ' queued.');
-          break;
+        }  break;
 
 	 case 'orders':
 	    console.log('=== CURRENT ORDERS ===');
