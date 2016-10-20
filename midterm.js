@@ -2,11 +2,12 @@
 //Project Name: CMPE 172 Midterm 
 //Date: October 21, 2016
 
+var fs = require('fs');
 //var rate = require("bitcoin-exchange-rates");
 var repl = require('repl'),
 //    config = require('./config'),
     rest = require('request');
-
+//var csv = require('/Market-Research');
 /*var red = '|u001b[31m' ,
     bold = '\u001b[1m' ,
     reset = '\u001b[0m';
@@ -31,7 +32,8 @@ console.log("Success");
 });
 */
 var http = require('http');
-
+var csv = require('fast-csv');
+var ws = fs.createWriteStream('DW_test.csv');
 var rate;
 var conversion = http.get({
     host: 'api.coindesk.com',
@@ -138,11 +140,22 @@ else {
         }  break;
 
 	 case 'orders':
+	
+//	    fs.writeFile('DavidWMidterm.txt', function(err) {
+//		if (err) return console.log(err);
 	    console.log('=== CURRENT ORDERS ===');
-	    Object.keys(orders).forEach(function(orderID) {
+	    csv
+		.write([  Object.keys(orders).forEach(function(orderID) {
 		var order = orders[ orderID ];
-		console.log(orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED');
-		}); break;
+		//csv.write([
+		console.log(orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED')
+		    [orderID, order.type.toUpperCase(), order.amount]
+], {headers:true}).pipe(ws);
+//		fs.writeFile('DavidWMidterm.txt', writeTHIS, function (err) {
+//		    if (err) return console.log(err);
+//		    });
+		
+	    }); break;
    
 	    default:
 	    console.log('unknown command: "' + cmd + '"'); break;
