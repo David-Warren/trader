@@ -3,20 +3,20 @@
 //Date: October 21, 2016
 
 var repl = require('repl'),
- //   config = require('./config'),
-    req = require('request');
+//    config = require('./config'),
+    rest = require('request');
 
 var red = '|u001b[31m' ,
     bold = '\u001b[1m' ,
     reset = '\u001b[0m';
 
 var orders = {};
-var market = { rates: 
-{}
+var market = {
+    rates: {}
 };
 
 //always start with good exchange rates.
-req.get('https://coinbase.com/api/v1/currencies/exchange_rates').on('complete', function(data, res) {
+rest.get('https://coinbase.com/api/v1/currencies/exchange_rates').on('complete', function(data, res) {
   market.rates = data;
 });
 
@@ -55,7 +55,10 @@ repl.start({
                   , amount: amount
                   , denomination: denomination
                   , priceCeiling: priceCeiling
-                 };
+          //        , agent: setTimeout(function() {
+            //          executeOrder( orderID );
+              //      }, 1) // issue order immediately.
+                };
 
                 amount = (amount - 0.15) / ( 1.01 * rate);
 
@@ -71,7 +74,10 @@ repl.start({
                   type: 'buy'
                 , amount: amount
                 , denomination: denomination
-                  };
+  //              , agent: setTimeout(function() {
+     //               executeOrder( orderID );
+       //           }, 1) // issue order immediately.
+              };
 
               callback('Order to BUY ' + tokens[1] + ' BTC queued.');
             }
@@ -90,14 +96,14 @@ repl.start({
 });
 
 // Regularly show current order status.
-/*setInterval(function() {
+setInterval(function() {
 
-  req.get('https://coinbase.com/api/v1/currencies/exchange_rates').on('complete', function(data, res) {
+  rest.get('https://coinbase.com/api/v1/currencies/exchange_rates').on('complete', function(data, res) {
     if (res.statusCode == 200) {
       market.rates = data;
     }
   });
-*/
+
   console.log('CURRENT BTC/USD: ' + market.rates.btc_to_usd);
   console.log('=== CURRENT ORDERS ===');
 
@@ -106,23 +112,25 @@ repl.start({
     console.log(orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED');
   });
 }, 60000);
-};
-/* function executeOrder(orderID) {
+/*
+function executeOrder(orderID) {
   var order = orders[ orderID ];
   var amount = parseFloat(order.amount);
 
   if (order.denomination != 'BTC') {
     var originalCurrency = amount;
     amount = (amount - 0.15) / ( 1.01 * market.rates[ 'btc_to_' + order.denomination.toLowerCase() ]);
-    /* console.log('at current rate, ' + originalCurrency + ' ' + order.denomination + ' will buy ' + amount + ' BTC.'); }
-*/
-
+    /* console.log('at current rate, ' + originalCurrency + ' ' + order.denomination + ' will buy ' + amount + ' BTC.'); */
+//  }
+/*
   switch(order.type) {
     case 'buy':
       console.log('Attempting to buy ' + amount + ' BTC...');
+/*
+      if (config.debug) { console.log(JSON.stringify(orders[orderID])); }
 
       if (market.rates['btc_to_' + order.denomination.toLowerCase()] < order.priceCeiling) {
-        req.postJson('https://coinbase.com/api/v1/buys?api_key=' + config.coinbase.key, {
+        rest.postJson('https://coinbase.com/api/v1/buys?api_key=' + config.coinbase.key, {
           qty: amount
         }).on('complete', function(data, res) {
           if (config.debug) { console.log(data); }
@@ -140,7 +148,7 @@ repl.start({
 
         });
       } else {
-//        console.log('Skipping transaction, price above ' + order.priceCeiling.toString())
+        console.log('Skipping transaction, price above ' + order.priceCeiling.toString())
         orders[ orderID ].agent = setTimeout(function() {
           executeOrder( orderID );
         }, config.coinbase.rate);
@@ -148,5 +156,5 @@ repl.start({
 
     break;
   }
-
-}
+*/
+//}
