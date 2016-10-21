@@ -3,7 +3,7 @@
 //Date: October 21, 2016
 var generate = require('csv-generate');
 var fs = require('fs');
-var repl = require('repl'),
+var repl = require('repl');
 var rest = require('request');
 var uu = require('underscore');
 var orders = {};
@@ -65,9 +65,7 @@ else {
                 amount = (amount - 0.15) / ( 1.01 * rate);
 
                 callback('Order to BUY ' + tokens[1] + ' ' + denomination + ' worth of BTC queued @ ' + rate + ' BTC/' + denomination + ' (' + amount + ' BTC) below ' + priceCeiling );
-              
-              else {
-		  console.log('No known exhange rate for BTC/' + denomination + '. Order failed.');
+             
             } else {
               orders[ orderID ] = {
                   type: 'buy'
