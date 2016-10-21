@@ -1,7 +1,7 @@
 //Owner: David Warren
 //Project Name: CMPE 172 Midterm 
 //Date: October 21, 2016
-
+var generate = require('csv-generate');
 var fs = require('fs');
 //var rate = require("bitcoin-exchange-rates");
 var repl = require('repl'),
@@ -13,7 +13,7 @@ var repl = require('repl'),
     reset = '\u001b[0m';
 */
 
-
+var uu = require('underscore');
 var orders = {};
 var market = {rates:{}};
 /*
@@ -32,7 +32,7 @@ console.log("Success");
 });
 */
 var http = require('http');
-var csv = require('fast-csv');
+var csv = require('csv');
 var ws = fs.createWriteStream('DW_test.csv');
 var rate;
 var conversion = http.get({
@@ -140,22 +140,25 @@ else {
         }  break;
 
 	 case 'orders':
-	
-//	    fs.writeFile('DavidWMidterm.txt', function(err) {
-//		if (err) return console.log(err);
+	var headers = ["orderID", "type", "Amount", "currency"];
+	    var stringifier = csv.stringify({ header: true, columns: headers});
+	    var order = orders[ orderID ];
+	    uu.each(orders, function(order,orderID) {
+		var result = (orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED');
+		console.log(result);
+		var generator = generate({columns: ['int', 'bool'], length: 2});
+		generator.pipe(csv.transform(function(){
+		    return Object.keys(orders[orderID]).map(function(key,value){
+			return orders[orderID][key]
+			})
+               }))
+		   .pipe(stringifier)
+		   .pipe(fs.createWriteStream('Output.csv',{flags: 'w' }));
+		   });
+
 	    console.log('=== CURRENT ORDERS ===');
-	    csv
-		.write([  Object.keys(orders).forEach(function(orderID) {
-		var order = orders[ orderID ];
-		//csv.write([
-		console.log(orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED')
-		    [orderID, order.type.toUpperCase(), order.amount]
-], {headers:true}).pipe(ws);
-//		fs.writeFile('DavidWMidterm.txt', writeTHIS, function (err) {
-//		    if (err) return console.log(err);
-//		    });
-		
-	    }); break;
+		console.log(orderID + ' : ' + order.type.toUpperCase() + ' ' + order.amount + ' : UNFILLED');
+		break;
    
 	    default:
 	    console.log('unknown command: "' + cmd + '"'); break;
